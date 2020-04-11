@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<robot name="kuka_model_macro" xmlns:xacro="http://wiki.ros.org/xacro">
+
+	<xacro:macro name="base_link_macro" params="base_link_name">
+		<link name="${base_link_name}">
+			<visual>
+				<geometry>
+					<cylinder length="0.2" radius="0.02"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0.1"/>
+					<material name="yellow">
+						<color rgba="1 1 0 1"/>
+					</material>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.21" radius="0.2"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0.1"/>
+			</collision>
+			<inertial>
+				<mass value="1"/>
+				<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+			</inertial>
+		</link>
+	</xacro:macro>
+
+
+	<xacro:macro name="kuka_joint" params="name type parent max_veloc max_effort width_lim child *origin *axis">
+		<joint name="${name}" type="${type}">
+			<parent link="${parent}"/>
+			<child link="${child}"/>
+	            <limit effort="${max_effort}" velocity="${max_veloc}" lower="${-width_lim/2*(3.14/180)}" upper="${width_lim/2*(3.14/180)}"/>
+	            <xacro:insert_block name="origin"/>
+			<xacro:insert_block name="axis"/>
+	    		<dynamics damping="50" friction="1"/>
+		</joint>
+	</xacro:macro>
+
+	<xacro:macro name="kuka_link" params="name *origin">
+		<link name="${name}">
+			<visual>
+				<geometry>
+				<cylinder length="0.2" radius="0.02"/>
+				</geometry>
+				<xacro:insert_block name="origin"/>		
+		    		<material name="red">
+		      		<color rgba="0 0 1 1"/>
+		    		</material>
+		  	</visual>
+		  	<collision>
+		  		<geometry>
+		  			<cylinder length="0.21" radius="0.03"/>
+		  		</geometry>
+		  		<xacro:insert_block name="origin"/>		
+			</collision>
+			<inertial>
+				<mass value="1"/>
+				<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		  	</inertial>
+	 	</link>
+	</xacro:macro>	
+
+
+</robot>
